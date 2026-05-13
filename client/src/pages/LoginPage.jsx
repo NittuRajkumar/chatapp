@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import api from '../utils/axios'
 import { useAuth } from '../context/AuthContext'
 
 const LoginPage = () => {
@@ -17,8 +16,7 @@ const LoginPage = () => {
     setError('')
     setLoading(true)
     try {
-      const res = await api.post('/auth/login', form)
-      login(res.data.user, res.data.token)
+      await login(form.email, form.password)
       navigate('/dashboard')
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed')
@@ -34,13 +32,11 @@ const LoginPage = () => {
           <h1 className="text-2xl font-bold text-white mb-1">Welcome back</h1>
           <p className="text-slate-400 text-sm">Sign in to continue to ChatApp</p>
         </div>
-
         {error && (
           <div className="mb-4 px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
             {error}
           </div>
         )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm text-slate-400 mb-1 block">Email</label>
@@ -58,19 +54,14 @@ const LoginPage = () => {
               className="w-full bg-[#0f1117] border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition"
             />
           </div>
-          <button
-            type="submit" disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium py-2.5 rounded-lg transition mt-2"
-          >
+          <button type="submit" disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-medium py-2.5 rounded-lg transition mt-2">
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
-
         <p className="text-center text-slate-500 text-sm mt-6">
           No account?{' '}
-          <Link to="/register" className="text-blue-400 hover:text-blue-300 transition">
-            Register
-          </Link>
+          <Link to="/register" className="text-blue-400 hover:text-blue-300 transition">Register</Link>
         </p>
       </div>
     </div>
