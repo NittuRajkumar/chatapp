@@ -9,29 +9,29 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <SocketProvider>
-          <ChatProvider>
-            <PresenceProvider>
-              <NotifProvider>
-                <Routes>
-                  <Route path="/" element={<Navigate to="/login" replace />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/dashboard/*" element={
-                    <ProtectedRoute><DashboardPage /></ProtectedRoute>
-                  } />
-                </Routes>
-              </NotifProvider>
-            </PresenceProvider>
-          </ChatProvider>
-        </SocketProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  )
-}
+const ProtectedApp = () => (
+  <SocketProvider>
+    <ChatProvider>
+      <PresenceProvider>
+        <NotifProvider>
+          <DashboardPage />
+        </NotifProvider>
+      </PresenceProvider>
+    </ChatProvider>
+  </SocketProvider>
+)
+
+const App = () => (
+  <BrowserRouter>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard/*" element={<ProtectedRoute><ProtectedApp /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </AuthProvider>
+  </BrowserRouter>
+)
 
 export default App
